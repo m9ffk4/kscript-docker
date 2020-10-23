@@ -2,20 +2,17 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: master
 
 jobs:
-  build:
+  path-context:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag m9ffk4/kscript:$(date +%s)
-  push:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Push the Docker image
-      run: docker push m9ffk4/kscript:$(date +%s)
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64,linux/386
+          push: true
+          tags: m9ffk4/kscript:$(git rev-parse --short "$GITHUB_SHA")-${GITHUB_REF##*/}

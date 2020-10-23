@@ -7,12 +7,15 @@ on:
     branches: [ main ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag m9ffk4/kscript:$(date +%s)
+  push:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Push the Docker image
+      run: docker push m9ffk4/kscript:$(date +%s)
